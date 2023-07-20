@@ -43,6 +43,6 @@ jobs:
             sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             sudo systemctl start docker
             cd /home/centos/CounterApp &&
-            git clone  https://github.com/MaximMandelblum/payoneer.git
-            docker build -t counter-service .
-            docker run -d -p 80:80 counter-service '
+            sudo git clone  https://github.com/MaximMandelblum/payoneer.git
+            sudo docker build -t counter-service .
+            sudo docker run -d -p 80:80 counter-service '
