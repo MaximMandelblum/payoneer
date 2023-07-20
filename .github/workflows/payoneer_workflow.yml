@@ -21,10 +21,10 @@ jobs:
       - name: Install dependencies and build the app
         run: |
 
-          mkdir /home/centos/payoneer
+          mkdir payoneer
           # npm run build
 
       - name: Deploy to EC2
         run: |
           # Replace 'USERNAME', 'EC2_PUBLIC_IP', and '/path/to/your/app' with your actual values
-          ssh -o StrictHostKeyChecking=no centos@3.71.38.22 "cd /home/centos/payoneer"
+          ssh -o StrictHostKeyChecking=no centos@3.71.38.22 "cd /payoneer"
