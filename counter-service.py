@@ -10,5 +10,6 @@ def handle_requests():
         counter += 1
     return f"Counter: {counter}"
 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
