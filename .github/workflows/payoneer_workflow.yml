@@ -7,20 +7,20 @@ on:
 
 jobs:
 #First we will see the application build or not , then we will deploy in EC2
-  build:
-    runs-on: ubuntu-latest
+  # build:
+  #   runs-on: ubuntu-latest
     
-    steps:
-    - uses: actions/checkout@v2
+  #   steps:
+  #   - uses: actions/checkout@v2
     
-    - name: Build the docker_compose
-      run: docker build -t counter-service .
+  #   - name: Build the docker_compose
+  #     run: docker build -t counter-service .
       
-    - name: Run the application
-      run: docker run -d -p 80:80 counter-service
+  #   - name: Run the application
+  #     run: docker run -d -p 80:80 counter-service
 
   Deploy:
-    needs: build
+    # needs: build
     runs-on: ubuntu-latest
     
     steps:
@@ -43,9 +43,6 @@ jobs:
             sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             sudo systemctl start docker
             cd /home/centos/CounterApp &&
-            git checkout master &&
-            git fetch --all &&
-            git reset --hard origin/master &&
-            git pull origin master &&
+            git clone  https://github.com/MaximMandelblum/payoneer.git
             docker build -t counter-service .
             docker run -d -p 80:80 counter-service '
