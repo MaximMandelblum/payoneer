@@ -7,20 +7,24 @@ on:
 
 jobs:
 #First we will see the application build or not , then we will deploy in EC2
-  # build:
-  #   runs-on: ubuntu-latest
+  clean:
+    runs-on: ubuntu-latest
     
-  #   steps:
-  #   - uses: actions/checkout@v2
+    steps:
     
-  #   - name: Build the docker_compose
-  #     run: docker build -t counter-service .
-      
-  #   - name: Run the application
-  #     run: docker run -d -p 80:80 counter-service
+      - name: Deploy in EC2    
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY  }}
+          REMOTE_HOST : ${{ secrets.HOST_DNS  }}
+          REMOTE_USER : ${{ secrets.USERNAME  }}
+          
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} '
+          sudo docker kill $(docker ps -q)
 
   Deploy:
-    # needs: build
+    needs: clean
     runs-on: ubuntu-latest
     
     steps:
