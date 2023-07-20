@@ -1,30 +1,51 @@
-name: Deploy to EC2
+name: CI/CD counter app
 
 on:
   push:
     branches:
-      - main # Change this to the branch you want to trigger deployments from
+      - main
 
 jobs:
-  deploy:
+#First we will see the application build or not , then we will deploy in EC2
+  build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    
+    - name: Build the docker_compose
+      run: docker build -t counter-service .
+      
+    - name: Run the application
+      run: docker run -d -p 80:80 counter-service
 
-      - name: Set up SSH key
-        uses: webfactory/ssh-agent@v0.5.2
-        with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-
-      - name: Install dependencies and build the app
+  Deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2 
+      - name: Deploy in EC2
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY  }}
+          REMOTE_HOST : ${{ secrets.HOST_DNS  }}
+          REMOTE_USER : ${{ secrets.USERNAME  }}
+            
         run: |
-
-          mkdir payoneer
-          # npm run build
-
-      - name: Deploy to EC2
-        run: |
-          # Replace 'USERNAME', 'EC2_PUBLIC_IP', and '/path/to/your/app' with your actual values
-          ssh -o StrictHostKeyChecking=no centos@3.71.38.22 "cd /payoneer"
+          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} '
+          
+            #Now we have got the access of EC2 and we will start the deploy .
+            mkdir /home/centos/CounterApp
+            sudo dnf install git -y
+            sudo yum install -y yum-utils
+            sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+            sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            sudo systemctl start docker
+            cd /home/centos/CounterApp &&
+            git checkout master &&
+            git fetch --all &&
+            git reset --hard origin/master &&
+            git pull origin master &&
+            docker build -t counter-service .
+            docker run -d -p 80:80 counter-service '
