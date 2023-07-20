@@ -44,5 +44,6 @@ jobs:
             sudo systemctl start docker
             cd /home/centos/CounterApp &&
             sudo git clone  https://github.com/MaximMandelblum/payoneer.git
+            cd /home/centos/CounterApp/payoneer
             sudo docker build -t counter-service .
             sudo docker run -d -p 80:80 counter-service '
