@@ -6,21 +6,7 @@ on:
       - main
 
 jobs:
-#First we will see the application build or not , then we will deploy in EC2
-  # build:
-  #   runs-on: ubuntu-latest
-    
-  #   steps:
-  #   - uses: actions/checkout@v2
-    
-  #   - name: Build the docker_compose
-  #     run: docker build -t counter-service .
-      
-  #   - name: Run the application
-  #     run: docker run -d -p 80:80 counter-service
-
   Deploy:
-    # needs: build
     runs-on: ubuntu-latest
     
     steps:
