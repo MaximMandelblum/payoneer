@@ -3,7 +3,7 @@ name: CI/CD counter app
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
 #First we will see the application build or not , then we will deploy in EC2
@@ -27,9 +27,9 @@ jobs:
       - uses: actions/checkout@v2 
       - name: Deploy in EC2
         env:
-            PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY  }}
-            HOSTNAME : ${{ secrets.HOST_DNS  }}
-            USER_NAME : ${{ secrets.USERNAME  }}
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY  }}
+          REMOTE_HOST : ${{ secrets.HOST_DNS  }}
+          REMOTE_USER : ${{ secrets.USERNAME  }}
             
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
