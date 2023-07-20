@@ -37,10 +37,10 @@ jobs:
           
             #Now we have got the access of EC2 and we will start the deploy .
             mkdir /home/centos/CounterApp
-            sudo dnf install git -y
+            sudo yum install git -y
             sudo yum install -y yum-utils
             sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-            sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             sudo systemctl start docker
             cd /home/centos/CounterApp &&
             git checkout master &&
